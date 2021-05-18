@@ -1,31 +1,55 @@
 import React, { useRef } from 'react';
-import { View, Button } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import { Form } from '@unform/mobile';
+import { FormHandles, SubmitHandler } from '@unform/core';
 
 import Input from '../../UI/Input';
 
-import { FormTitle, NewForm } from './styles';
+import {  Container, LogoTgl, FormTitle,
+          FormBody, BorderBottom, FormInfos,
+          ForgotText, ButtonLogin } from './styles';
 
 interface IAuthProps {
   clickHandler: (event: any) => (any);
 }
 
-const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
-  const formRef = useRef(null);
+interface FormData {
+  name: string
+  email: string
+}
 
-  function handleSubmit(data: any) {
+const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSubmit:SubmitHandler<FormData> =  (data) => {
     console.log(data);
-    // { email: 'test@example.com', password: '123456' }
+
   }
   
   return (
-    <View>
-      <FormTitle> Authentication </FormTitle>
-      <NewForm ref={formRef} onSubmit={handleSubmit}>
-        <Input placeholder="Email" />
+    <Container>
 
-        <Button title="Sign in" onPress={() => formRef.current.submitForm()} />
-      </NewForm>
-    </View>
+      <FormInfos>
+        <LogoTgl> TGL </LogoTgl>
+        <BorderBottom />
+        <FormTitle> Authentication </FormTitle>
+      </FormInfos>
+
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <FormBody>
+          <Input name="name" placeholder="Email" type="email" required />
+          <Input name="email" placeholder="Password" type="password" required />
+          <ForgotText> 
+            <Text> I forget my password! </Text>
+          </ForgotText>
+
+          <TouchableOpacity>
+            <ButtonLogin> Log In </ButtonLogin> 
+          </TouchableOpacity>
+        </FormBody>
+
+    </Form>
+    </Container>
   )
 }
 

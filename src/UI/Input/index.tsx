@@ -5,4 +5,4 @@ const Input : React.FC<any> = ({...rest}) => (
   <Container {...rest} />
 )
 
-export default Input;
+export default Input; 
