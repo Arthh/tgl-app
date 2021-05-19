@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { Form } from '@unform/mobile';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import Input from '../../UI/Input';
 
@@ -20,6 +21,7 @@ interface FormData {
 }
 
 const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
+  const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit:SubmitHandler<FormData> =  (data) => {
@@ -39,9 +41,9 @@ const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
           <Input name="name" placeholder="Email" type="email" required />
           <Input name="email" placeholder="Password" type="password" required />
 
-          <ForgotText> 
-            <Text> I forget my password! </Text>
-          </ForgotText>
+          <TouchableOpacity onPress={() => navigation.navigate('forgotpass')} > 
+            <ForgotText > I forget my password! </ForgotText>
+          </TouchableOpacity>
 
           <TouchableOpacity>
             <ButtonLogin> Log In  <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 
@@ -49,7 +51,7 @@ const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
         </FormBody>
       </Form>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('signup')}>
         <ButtonSignUp> Sign Up <AntDesign name="arrowright" size={30} color="#707070" /> </ButtonSignUp>
       </TouchableOpacity>
     </Container>

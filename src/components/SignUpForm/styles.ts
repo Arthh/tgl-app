@@ -16,7 +16,7 @@ export const LogoTgl = styled.Text`
   color: #707070;
   font-weight: 700;
   font-style: italic;
-  margin-top: 30%;
+  margin-top: 20%;
 `;
 
 export const BorderBottom = styled.View`

@@ -9,6 +9,7 @@ import Input from '../../UI/Input';
 import {  Container, LogoTgl, FormTitle,
           FormBody, BorderBottom, FormInfos,
           ButtonLogin, ButtonSignUp } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 interface IAuthProps {
   clickHandler: (event: any) => (any);
@@ -19,6 +20,7 @@ interface FormData {
 }
 
 const ForgotPassForm: React.FC<IAuthProps> = ({ clickHandler }) => {
+  const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit:SubmitHandler<FormData> =  (data) => {
@@ -30,7 +32,7 @@ const ForgotPassForm: React.FC<IAuthProps> = ({ clickHandler }) => {
       <FormInfos>
         <LogoTgl> TGL </LogoTgl>
         <BorderBottom />
-        <FormTitle> Reset password </FormTitle>
+        <FormTitle> Forgot Password </FormTitle>
       </FormInfos>
 
       <Form ref={formRef} onSubmit={handleSubmit}>
@@ -43,11 +45,11 @@ const ForgotPassForm: React.FC<IAuthProps> = ({ clickHandler }) => {
         </FormBody>
       </Form>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('login')}>
         <ButtonSignUp> <AntDesign name="arrowleft" size={30} color="#707070" /> Back </ButtonSignUp>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('signup')}>
         <ButtonSignUp> Sign Up <AntDesign name="arrowright" size={30} color="#707070" /> </ButtonSignUp>
       </TouchableOpacity>
     </Container>
