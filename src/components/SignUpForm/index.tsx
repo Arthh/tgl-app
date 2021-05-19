@@ -8,18 +8,19 @@ import Input from '../../UI/Input';
 
 import {  Container, LogoTgl, FormTitle,
           FormBody, BorderBottom, FormInfos,
-          ForgotText, ButtonLogin, ButtonSignUp } from './styles';
+          ButtonLogin, ButtonSignUp } from './styles';
 
 interface IAuthProps {
   clickHandler: (event: any) => (any);
 }
 
 interface FormData {
-  name: string
-  email: string
+  name: string,
+  email: string,
+  password: string
 }
 
-const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
+const SignUpForm: React.FC<IAuthProps> = ({ clickHandler }) => {
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit:SubmitHandler<FormData> =  (data) => {
@@ -31,30 +32,27 @@ const AuthForm: React.FC<IAuthProps> = ({ clickHandler }) => {
       <FormInfos>
         <LogoTgl> TGL </LogoTgl>
         <BorderBottom />
-        <FormTitle> Authentication </FormTitle>
+        <FormTitle> Registration </FormTitle>
       </FormInfos>
 
       <Form ref={formRef} onSubmit={handleSubmit}>
         <FormBody>
-          <Input name="name" placeholder="Email" type="email" required />
-          <Input name="email" placeholder="Password" type="password" required />
-
-          <ForgotText> 
-            <Text> I forget my password! </Text>
-          </ForgotText>
+        <Input name="name" placeholder="Name" type="text" required />
+          <Input name="email" placeholder="Email" type="email" required />
+          <Input name="password" placeholder="Password" type="password" required />
 
           <TouchableOpacity>
-            <ButtonLogin> Log In  <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 
+            <ButtonLogin> Register <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 
           </TouchableOpacity>
         </FormBody>
       </Form>
 
       <TouchableOpacity>
-        <ButtonSignUp> Sign Up <AntDesign name="arrowright" size={30} color="#707070" /> </ButtonSignUp>
+        <ButtonSignUp> <AntDesign name="arrowleft" size={30} color="#707070" /> Back </ButtonSignUp>
       </TouchableOpacity>
     </Container>
   )
 }
 
 
-export default AuthForm;
+export default SignUpForm;

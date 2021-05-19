@@ -51,7 +51,7 @@ export const FormBody = styled.View`
 
 export const ForgotText = styled.Text`
   text-align: right;
-  padding: 20px 30px;
+  padding: 15px 30px;
 
   font-size: 15px;
   font-style: italic;

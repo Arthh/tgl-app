@@ -9,6 +9,7 @@ export const Container = styled.TextInput`
   font-style: italic;
   color: #9D9D9D;
   opacity: 1;
-  border: 2px solid #ebebeb;
+  border: 1px solid #ebebeb;
+
   padding: 5px 30px;
 `;

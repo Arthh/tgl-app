@@ -1,19 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import AuthForm from './src/components/AuthForm';
+import Login from './src/screens/Login';
+import SignUp from './src/screens/SignUp';
+import ForgotPass from './src/screens/ForgotPass';
+import Home from './src/screens/Home';
 
 
 export default function App() {
-  const alertShow = () => {
-   return
-  }
 
   return (
     <View >
       <StatusBar style="auto" />
-      <AuthForm clickHandler={() => {}} />
+      <Home/>
     </View>
   );
 }
