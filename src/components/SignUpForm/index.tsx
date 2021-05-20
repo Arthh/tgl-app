@@ -1,9 +1,11 @@
 import React, { useRef } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import * as Yup from 'yup';
+import { TouchableOpacity } from 'react-native';
 import { Form } from '@unform/mobile';
-import { FormHandles, SubmitHandler } from '@unform/core';
+import { FormHandles } from '@unform/core';
 import { AntDesign } from '@expo/vector-icons';
 
+import api from '../../services/api';
 import Input from '../../UI/Input';
 
 import {  Container, LogoTgl, FormTitle,
@@ -11,23 +13,34 @@ import {  Container, LogoTgl, FormTitle,
           ButtonLogin, ButtonSignUp } from './styles';
 import { useNavigation } from '@react-navigation/native';
 
-interface IAuthProps {
-  clickHandler: (event: any) => (any);
-}
-
 interface FormData {
   name: string,
   email: string,
   password: string
 }
 
-const SignUpForm: React.FC<IAuthProps> = ({ clickHandler }) => {
+const SignUpForm: React.FC<any> = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit:SubmitHandler<FormData> =  (data) => {
-    console.log(data);
-  }
+  const handleSubmit = async (data: FormData) => {
+    try {
+      formRef.current?.setErrors({});
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome é obrigatório'),
+        email: Yup.string().email('Digite um email valido').required('E-mail obrigatório'),
+        password: Yup.string().required('Senha obrigatório'),
+      });
+
+      await schema.validate(data, {
+          abortEarly: false,
+      });
+      await api.post('users', data);
+      
+    } catch (err) {
+      alert('Credenciais incorretas!');
+    }
+  };
   
   return (
     <Container>
@@ -39,11 +52,23 @@ const SignUpForm: React.FC<IAuthProps> = ({ clickHandler }) => {
 
       <Form ref={formRef} onSubmit={handleSubmit}>
         <FormBody>
-        <Input name="name" placeholder="Name" type="text" required />
-          <Input name="email" placeholder="Email" type="email" required />
-          <Input name="password" placeholder="Password" type="password" required />
+          <Input
+            name="name"
+            placeholderTextColor="#9D9D9D"
+            selectionColor={'#B5C401'}
+          />
+          <Input
+            name="email"
+            placeholderTextColor="#9D9D9D"
+            selectionColor={'#B5C401'}
+          />
+          <Input
+            name="password"
+            placeholderTextColor="#9D9D9D"
+            selectionColor={'#B5C401'}
+          />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => formRef.current?.submitForm()}  >
             <ButtonLogin> Register <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 
           </TouchableOpacity>
         </FormBody>
