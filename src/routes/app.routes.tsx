@@ -1,9 +1,12 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import Home from '../screens/Home';
-import { View } from 'react-native';
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Image, View } from 'react-native';
+
+import Home from '../screens/Home';
+import Account from '../screens/Account';
+import NewBet from '../screens/NewBet';
 
 const App = createBottomTabNavigator();
 
@@ -13,14 +16,26 @@ const AppRoutes: React.FC = () => {
       initialRouteName='Home'
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === "home") {
+          if(route.name === "Home"){
             return (
-              <View>
-                <Ionicons name="ios-home-outline" size={30} color='#B5C401' />
-              </View>
+              <Ionicons name="ios-home-outline" size={30} color='#B5C401' />
             );
-         
           }
+
+          if(route.name === "NewBet"){
+            return (
+              <View style={{ width: 95, height: 95, borderColor:'#FFF', borderWidth: 5, borderRadius: 100, backgroundColor: '#B5C401', alignItems: 'center', justifyContent: 'center' }}>
+                <Image source={require('../assets/bets.png')} style={{ width: 80, height: 80 }}/>
+              </View>
+            )
+          } 
+
+          if(route.name === "Account"){
+            return (
+                <FontAwesome name="user-o" size={30} color='#B5C401' />
+            );
+          }
+
         }
     })}
 
@@ -34,7 +49,9 @@ const AppRoutes: React.FC = () => {
     }}
 
     >
-        <App.Screen name="home" component={Home} />
+        <App.Screen name="Home" component={Home} />
+        <App.Screen name="NewBet" component={NewBet} options={{ title: '' } } />
+        <App.Screen name="Account" component={Account} />
     </App.Navigator>
   );
 }

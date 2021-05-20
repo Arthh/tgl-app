@@ -2,9 +2,7 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 
-
 import { StatusBar } from 'expo-status-bar';
-
 
 import Home from './src/screens/Home';
 import AuthRoutes from './src/routes/auth.routes';

@@ -10,7 +10,7 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   text-transform: uppercase;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: bold;
   font-style: italic;
   color: #707070;
@@ -24,12 +24,13 @@ export const FilterText = styled.Text`
   margin: 15px 0px;
 `;
 
-export const FilterButtonArea = styled.ScrollView.attrs({
+export const GameTypeArea = styled.ScrollView.attrs({
   contentContainerStyle: { paddingHorizontal: 0 },
   horizontal: true,
   showsHorizontalScrollIndicator: false,
 })`
   width: 100%;
+  height: auto;
 `;
 
 export const ListGamesArea = styled.ScrollView.attrs({
