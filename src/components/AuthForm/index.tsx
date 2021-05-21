@@ -29,19 +29,26 @@ const AuthForm: React.FC<any> = () => {
       formRef.current?.setErrors({});
       const schema = Yup.object().shape({
           email: Yup.string().email('Digite um email valido').required('E-mail obrigatório'),
-          password: Yup.string().required('Senha obrigatório'),
+          password: Yup.string().required('Senha obrigatória'),
       });
 
       await schema.validate(data, {
           abortEarly: false,
       });
+      console.log('baixo')
       await signIn({
           email: data.email,
           password: data.password,
       });
 
   } catch (err) {
-    alert('Credenciais incorretas!');
+    if(err instanceof Yup.ValidationError){
+      const errorMessages = {};
+      err.inner.forEach(error => {
+        errorMessages[error.path] = error.message;
+      })
+      formRef.current.setErrors(errorMessages)
+    }
   }};
   
   return (
@@ -62,6 +69,7 @@ const AuthForm: React.FC<any> = () => {
 
         <Input
           name="password"
+          secureTextEntry={true}
           placeholderTextColor="#9D9D9D"
           selectionColor={'#B5C401'}
           />

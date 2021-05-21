@@ -35,10 +35,21 @@ const SignUpForm: React.FC<any> = () => {
       await schema.validate(data, {
           abortEarly: false,
       });
-      await api.post('users', data);
-      
+      await api.post('users', {
+        username: data.name,
+        email: data.email,
+        password: data.password
+      });
+      alert('Registrado com sucesso!');
+      navigation.navigate('login');
     } catch (err) {
-      alert('Credenciais incorretas!');
+      if(err instanceof Yup.ValidationError){
+        const errorMessages = {};
+        err.inner.forEach(error => {
+          errorMessages[error.path] = error.message;
+        })
+        formRef.current.setErrors(errorMessages)
+      }
     }
   };
   

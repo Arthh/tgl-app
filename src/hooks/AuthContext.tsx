@@ -39,23 +39,28 @@ const AuthProvider: React.FC = ({ children }) => {
     LoadData()
   }, [])
 
-  const signIn = async ({ email, password }: UserData) => {
+  const signIn = useCallback(async ({ email, password }) => {
     try{
-    const response = await api.post('/sessions ', {
-      email,
-      password,
-    });
-    const { token } = response.data.token;
-    const { name } = response.data.user;
-    setName(name);
-    setToken(token);
+      console.log(email, password)
+      const response = await api.post('session ', {
+        email,
+        password
+      });
+      console.log(response.data);
+      return
 
-    AsyncStorage.setItem('#@tgltoken@#', token);
-    api.defaults.headers.Authorization = `Bearer ${token}`;
+      const { token } = response.data.token;
+      const { name } = response.data.user;
+
+      setName(name);
+      setToken(token);
+
+      AsyncStorage.setItem('#@tgltoken@#', token);
+      api.defaults.headers.Authorization = `Bearer ${token}`;
     }catch(err){
-     console.log(err.response)   
+     console.log('deu erro');   
     }
-  };
+  },[]);
 
   const userLogged = useCallback(() => {
     const token = localStorage.AsyncStorage('#@tgltoken@#');
