@@ -29,7 +29,6 @@ const AuthProvider: React.FC = ({ children }) => {
   
       if (token) {
         api.defaults.headers.Authorization = `Bearer ${token}`;
-  
         return { token };
       }
   
@@ -41,16 +40,18 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async ({ email, password }) => {
     try{
-      console.log(email, password)
-      const response = await api.post('session ', {
+      const response = await api.post('/sessions', {
         email,
         password
       });
-      console.log(response.data);
-      return
+
+      console.log(response);
 
       const { token } = response.data.token;
       const { name } = response.data.user;
+
+      console.log(token, name);
+      return;
 
       setName(name);
       setToken(token);
@@ -58,7 +59,7 @@ const AuthProvider: React.FC = ({ children }) => {
       AsyncStorage.setItem('#@tgltoken@#', token);
       api.defaults.headers.Authorization = `Bearer ${token}`;
     }catch(err){
-     console.log('deu erro');   
+     console.log(err.message);   
     }
   },[]);
 

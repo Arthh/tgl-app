@@ -35,7 +35,7 @@ const AuthForm: React.FC<any> = () => {
       await schema.validate(data, {
           abortEarly: false,
       });
-      console.log('baixo')
+
       await signIn({
           email: data.email,
           password: data.password,

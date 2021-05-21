@@ -35,8 +35,8 @@ const SignUpForm: React.FC<any> = () => {
       await schema.validate(data, {
           abortEarly: false,
       });
-      await api.post('users', {
-        username: data.name,
+      await api.post('/users', {
+        name: data.name,
         email: data.email,
         password: data.password
       });
