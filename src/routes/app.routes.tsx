@@ -1,61 +1,72 @@
 import React from 'react';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import { Image, View } from 'react-native';
+import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { View, Button, Text, Image } from 'react-native';
 
-import Home from '../screens/Home';
-import Account from '../screens/Account';
+
+import Dashboard from '../screens/Home';
 import NewBet from '../screens/NewBet';
-import { useAuth } from '../hooks/AuthContext';
+import Account from '../screens/Account';
+
 
 const App = createBottomTabNavigator();
 
 const AppRoutes: React.FC = () => {
-  const { userLogged } = useAuth();
-  return (
-    <App.Navigator
-      initialRouteName='Home'
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          if(route.name === "Home"){
-            return (
-              <Ionicons name="ios-home-outline" size={30} color='#B5C401' />
-            );
-          }
 
-          if(route.name === "NewBet"){
-            return (
-              <View style={{ width: 95, height: 95, borderColor:'#FFF', borderWidth: 5, borderRadius: 100, backgroundColor: '#B5C401', alignItems: 'center', justifyContent: 'center' }}>
-                <Image source={require('../assets/bets.png')} style={{ width: 80, height: 80 }}/>
-              </View>
-            )
-          } 
+    return (
+        <>
+            <App.Navigator
+                initialRouteName='Home'
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconColor;
 
-          if(route.name === "Account"){
-            return (
-                <FontAwesome name="user-o" size={30} color='#B5C401' />
-            );
-          }
+                        if (route.name === "Home") {
+                            iconColor = focused ? '#B5C401' : '#C1C1C1';
+                            return (
+                                <View style={{ borderTopWidth: 4, borderColor: iconColor, padding: 5 }}>
+                                    <Ionicons name="ios-home-outline" size={30} color={iconColor} />
+                                </View>
+                            )
+                        }
 
-        }
-    })}
+                        if (route.name === "$") {
+                            iconColor = focused ? '#B5C401' : '#C1C1C1';
+                            return (
+                                <View style={{ backgroundColor: '#B5C401', borderWidth: 5, borderColor: '#fff', width: 100, height: 100, borderRadius: 50, alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
 
-    tabBarOptions={{
-        activeTintColor: '#B5C401',
-        inactiveTintColor: '#C1C1C1',
-        style: { height: 100, borderTopLeftRadius: 25, borderTopEndRadius: 25, },
-        labelStyle: { fontSize: 10, padding: 5, fontWeight: '700', fontStyle: 'italic' },
-        iconStyle: { marginTop: 10, },
-        tabStyle: {},
-    }}
+                                    <Image source={require('../assets/bets.png')} style={{ marginTop: 4, width: 63, height: 62 }} />
+                                </View>
+                            )
+                        }
 
-    >
-        <App.Screen name="Home" component={ Home } />
-        <App.Screen name="NewBet" component={ NewBet }/>
-        <App.Screen name="Account" component={ Account } />
-    </App.Navigator>
-  );
+                        if (route.name === "Account") {
+                            iconColor = focused ? '#B5C401' : '#C1C1C1';
+                            return (
+                                <View style={{ borderTopWidth: 4, borderColor: iconColor, padding: 6 }}>
+                                    <FontAwesome name="user-o" size={30} color={iconColor} />
+                                </View>
+                            )
+                        }
+                    }
+                })}
+
+                tabBarOptions={{
+                    activeTintColor: '#707070',
+                    inactiveTintColor: '#C1C1C1',
+                    style: { height: 71, borderTopLeftRadius: 25, borderTopEndRadius: 25, },
+                    labelStyle: { fontSize: 14, padding: 10, fontWeight: '700', fontStyle: 'italic' },
+                    iconStyle: { marginTop: 15, },
+                    tabStyle: {},
+                }}
+
+            >
+                <App.Screen name="Home" component={Dashboard} />
+                <App.Screen name="$" component={NewBet} options={{ title: '', }} />
+                <App.Screen name="Account" component={Account} />
+            </App.Navigator>
+        </>
+    );
 }
 
 export default AppRoutes;

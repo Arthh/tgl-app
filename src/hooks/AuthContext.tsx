@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import api from '../services/api';
 import Api from '../services/api';
 
+
+
 export interface UserData {
   name?: string
   email: string;
@@ -10,8 +12,6 @@ export interface UserData {
 }
 
 interface AuthContextState {
-  name: string;
-  token: string;
   signIn({ email, password }: UserData): Promise<void>;
   userLogged(): Promise<boolean>;
   signOut(): any;
@@ -21,20 +21,17 @@ interface AuthContextState {
 const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [name, setName] = useState<string>('');
-  const [token, setToken] = useState<string>('');
   
-
   useEffect(() => {
     const LoadData = async () => {
       const token = await AsyncStorage.getItem('#@tgltoken@#');
-  
+
       if (token) {
         api.defaults.headers.Authorization = `Bearer ${token}`;
         return { token };
       }
   
-      return '';
+      return null;
     };
 
     LoadData()
@@ -48,12 +45,9 @@ const AuthProvider: React.FC = ({ children }) => {
       });
 
       const { token } = response.data.token;
-      const { name } = response.data.user;
-
-      setName(name);
-      setToken(token);
 
       await AsyncStorage.setItem('#@tgltoken@#', token);
+
       api.defaults.headers.Authorization = `Bearer ${token}`;
     }catch(err){
      console.log(err.message);   
@@ -61,28 +55,23 @@ const AuthProvider: React.FC = ({ children }) => {
   },[]);
 
   const userLogged = async () => {
-    try{
-    const token = await AsyncStorage.getItem('#@tgltoken@#');
-    }catch(err){
-      console.log('erro no try do userlogged')
-    }
-    console.log('token', token)
+      const token = await AsyncStorage.getItem('#@tgltoken@#');
 
-    if (token) {
-      console.log('userLogged')
-      return true;
-    }
-    console.log('userNotLogged')
-    return false;
+      if(token){
+
+        return true;
+      }
+
+      return false;
   };
 
   const signOut = async () => {
     try{
     await AsyncStorage.removeItem('#@tgltoken@#');
+
     }catch(err){
       console.log('erro na hora de remover signOut')
     }
-    setToken('');
   };
 
   const updateUser = async (userData: UserData) => {
@@ -99,7 +88,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ name, token, signIn, userLogged, signOut, updateUser }}>
+    <AuthContext.Provider value={{ signIn, userLogged, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

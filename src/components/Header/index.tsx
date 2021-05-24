@@ -11,6 +11,13 @@ const Header: React.FC = () => {
   const route = useRoute();
   const { signOut } = useAuth();
   const routeName = route.name === 'NewBet'
+  const navigation = useNavigation()
+
+
+  const handleLogout = async () => {
+    await signOut()
+  }
+
 
   return (
     <Container>
@@ -20,7 +27,7 @@ const Header: React.FC = () => {
       </LogoArea>
       <HeaderOptions>
       {routeName &&  <AntDesign name="shoppingcart" size={35} color="#B5C401" />}
-      <MaterialIcons name="logout" size={35} color="#C1C1C1" onPress={() => signOut()} />
+      <MaterialIcons name="logout" size={35} color="#C1C1C1" onPress={handleLogout} />
       </HeaderOptions>
     </Container>
   );

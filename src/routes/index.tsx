@@ -1,17 +1,13 @@
 import React from 'react';
-
+import {ActivityIndicator, View} from 'react-native';
+import AuthRoutes from './auth.routes';
+import AppRoutes from './app.routes';
 import { useAuth } from '../hooks/AuthContext';
 
-import App from './app.routes';
-import Auth from './auth.routes';
-
 const Routes: React.FC = () => {
-  const { userLogged } = useAuth();
-  const logged = userLogged();
-  
-  console.log(logged)
+  const {userLogged} = useAuth();
 
-  return logged ? <App /> : <Auth />;
-};
+  return userLogged? <AppRoutes /> : <AuthRoutes />;
+}
 
 export default Routes;

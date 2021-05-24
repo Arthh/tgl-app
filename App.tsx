@@ -8,15 +8,17 @@ import { AuthProvider } from './src/hooks/AuthContext';
 
 import Routes from './src/routes';
 
+// import Routes from './src/routes/teste.routes';
+
 
 export default function App() {
 
   return (
     <NavigationContainer >
-      <AuthProvider>
         <StatusBar style="auto" />
-        <Routes />
-      </AuthProvider>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
     </NavigationContainer>
   );
 }

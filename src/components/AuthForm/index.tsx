@@ -19,7 +19,7 @@ interface FormData {
   password: string
 }
 
-const AuthForm: React.FC<any> = () => {
+const AuthForm: React.FC<any> = ({  }) => {
   const { signIn } = useAuth();
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
@@ -40,6 +40,7 @@ const AuthForm: React.FC<any> = () => {
           email: data.email,
           password: data.password,
       });
+      console.log('entrei no navigate');
       
   } catch (err) {
     if(err instanceof Yup.ValidationError){
