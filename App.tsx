@@ -6,9 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from './src/hooks/AuthContext';
 
-import Home from './src/screens/Home';
-import AuthRoutes from './src/routes/auth.routes';
-import AppRoutes from './src/routes/app.routes';
+import Routes from './src/routes';
 
 
 export default function App() {
@@ -17,7 +15,7 @@ export default function App() {
     <NavigationContainer >
       <AuthProvider>
         <StatusBar style="auto" />
-        <AuthRoutes />
+        <Routes />
       </AuthProvider>
     </NavigationContainer>
   );

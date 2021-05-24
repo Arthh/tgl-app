@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import api from '../services/api';
+import Api from '../services/api';
 
 export interface UserData {
   name?: string
@@ -12,8 +13,8 @@ interface AuthContextState {
   name: string;
   token: string;
   signIn({ email, password }: UserData): Promise<void>;
-  userLogged(): boolean;
-  signOut(): void;
+  userLogged(): Promise<boolean>;
+  signOut(): any;
   updateUser(userData: UserData): Promise<void>;
 }
 
@@ -21,7 +22,8 @@ const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [name, setName] = useState<string>('');
-  const [token, setToken] = useState<string>('')
+  const [token, setToken] = useState<string>('');
+  
 
   useEffect(() => {
     const LoadData = async () => {
@@ -40,40 +42,46 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async ({ email, password }) => {
     try{
-      const response = await api.post('/sessions', {
-        email,
-        password
+      const response = await Api.post('/session', {
+        email: email,
+        password: password
       });
-
-      console.log(response);
 
       const { token } = response.data.token;
       const { name } = response.data.user;
 
-      console.log(token, name);
-      return;
-
       setName(name);
       setToken(token);
 
-      AsyncStorage.setItem('#@tgltoken@#', token);
+      await AsyncStorage.setItem('#@tgltoken@#', token);
       api.defaults.headers.Authorization = `Bearer ${token}`;
     }catch(err){
      console.log(err.message);   
     }
   },[]);
 
-  const userLogged = useCallback(() => {
-    const token = localStorage.AsyncStorage('#@tgltoken@#');
+  const userLogged = async () => {
+    try{
+    const token = await AsyncStorage.getItem('#@tgltoken@#');
+    }catch(err){
+      console.log('erro no try do userlogged')
+    }
+    console.log('token', token)
 
     if (token) {
+      console.log('userLogged')
       return true;
     }
+    console.log('userNotLogged')
     return false;
-  }, []);
+  };
 
-  const signOut = () => {
-    localStorage.removeItem('#@tgltoken@#');
+  const signOut = async () => {
+    try{
+    await AsyncStorage.removeItem('#@tgltoken@#');
+    }catch(err){
+      console.log('erro na hora de remover signOut')
+    }
     setToken('');
   };
 

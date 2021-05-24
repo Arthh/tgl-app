@@ -7,10 +7,12 @@ import { Image, View } from 'react-native';
 import Home from '../screens/Home';
 import Account from '../screens/Account';
 import NewBet from '../screens/NewBet';
+import { useAuth } from '../hooks/AuthContext';
 
 const App = createBottomTabNavigator();
 
 const AppRoutes: React.FC = () => {
+  const { userLogged } = useAuth();
   return (
     <App.Navigator
       initialRouteName='Home'
@@ -49,9 +51,9 @@ const AppRoutes: React.FC = () => {
     }}
 
     >
-        <App.Screen name="Home" component={Home} />
-        <App.Screen name="NewBet" component={NewBet} options={{ title: '' } } />
-        <App.Screen name="Account" component={Account} />
+        <App.Screen name="Home" component={ Home } />
+        <App.Screen name="NewBet" component={ NewBet }/>
+        <App.Screen name="Account" component={ Account } />
     </App.Navigator>
   );
 }
