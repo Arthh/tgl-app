@@ -43,3 +43,5 @@ export const ListGamesArea = styled.ScrollView.attrs({
   width: 100%;
   height: 100%;
 `;
+
+export const SubArea = styled.View``;

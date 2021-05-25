@@ -5,12 +5,12 @@ import { Container, CustomText } from './styles'
 type IGameButton = ButtonProps & {
   color: string;
   isActive: boolean;
+  key?: string;
 }
 
-const ButtonGames: React.FC<IGameButton> =
- ({children, color, isActive,...rest}) => (
+const ButtonGames: React.FC<IGameButton> = ({children, color, isActive , ...rest}) => (
 
-  <Container  isActive={isActive} color={color} {...rest}>
+  <Container isActive={isActive} color={color} {...rest}>
     <CustomText isActive={isActive} color={color} > {children} </CustomText>
   </Container>
     );
