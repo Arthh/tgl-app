@@ -6,9 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from './src/hooks/AuthContext';
 
-import Routes from './src/routes';
 
-// import Routes from './src/routes/teste.routes';
+import Routes from './src/routes/index2';
 
 
 export default function App() {

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { useAuth } from '../../hooks/AuthContext';
 import { TouchableOpacity } from 'react-native';
@@ -23,8 +23,9 @@ const AuthForm: React.FC<any> = ({  }) => {
   const { signIn } = useAuth();
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = useCallback( async (data: FormData) => {
     try {
       formRef.current?.setErrors({});
       const schema = Yup.object().shape({
@@ -35,14 +36,14 @@ const AuthForm: React.FC<any> = ({  }) => {
       await schema.validate(data, {
           abortEarly: false,
       });
-      
+      setLoading(true);
       await signIn({
           email: data.email,
           password: data.password,
       });
-      console.log('entrei no navigate');
       
   } catch (err) {
+    setLoading(true);
     if(err instanceof Yup.ValidationError){
       const errorMessages = {};
       err.inner.forEach(error => {
@@ -50,7 +51,9 @@ const AuthForm: React.FC<any> = ({  }) => {
       })
       formRef.current.setErrors(errorMessages)
     }
-  }};
+    setLoading(false);
+    
+  }}, [signIn, loading]);
   
   return (
     <Container>

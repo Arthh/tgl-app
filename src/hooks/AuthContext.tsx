@@ -3,35 +3,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import api from '../services/api';
 import Api from '../services/api';
 
-
-
 export interface UserData {
   name?: string
   email: string;
   password?: string;
 }
 
+interface AuthState {
+  token: string;
+}
+
 interface AuthContextState {
   signIn({ email, password }: UserData): Promise<void>;
   userLogged(): Promise<boolean>;
   signOut(): any;
+  data: AuthState;
+  loading: boolean;
   updateUser(userData: UserData): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
+
 const AuthProvider: React.FC = ({ children }) => {
-  
+  const [data, setData] = useState<AuthState>({} as AuthState);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const LoadData = async () => {
       const token = await AsyncStorage.getItem('#@tgltoken@#');
 
       if (token) {
+        setData({token: token});
         api.defaults.headers.Authorization = `Bearer ${token}`;
-        return { token };
       }
   
-      return null;
+      setLoading(false);
     };
 
     LoadData()
@@ -45,6 +51,7 @@ const AuthProvider: React.FC = ({ children }) => {
       });
 
       const { token } = response.data.token;
+      setData({token: token})
 
       await AsyncStorage.setItem('#@tgltoken@#', token);
 
@@ -58,7 +65,6 @@ const AuthProvider: React.FC = ({ children }) => {
       const token = await AsyncStorage.getItem('#@tgltoken@#');
 
       if(token){
-
         return true;
       }
 
@@ -68,6 +74,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const signOut = async () => {
     try{
     await AsyncStorage.removeItem('#@tgltoken@#');
+    setData({} as AuthState)
 
     }catch(err){
       console.log('erro na hora de remover signOut')
@@ -88,7 +95,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ signIn, userLogged, signOut, updateUser }}>
+    <AuthContext.Provider value={{ signIn, data, loading, userLogged, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
