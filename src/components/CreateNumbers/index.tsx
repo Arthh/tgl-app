@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 import Number from '../Number';
@@ -9,11 +9,12 @@ interface ICreateNumbersProps {
   quantity: number;
   numbers: number[];
   color: string;
-  clickHandler(number: string);
+  clickHandler: (number: any) => any;
 }
 
 const CreateNumbers: React.FC<ICreateNumbersProps> = ({quantity,clickHandler, color , numbers}) => {
-  
+  const [numbersList, setNumbersList] = useState([])
+
   const formateNumber = (number: number) => { 
     var formated = number < 10 ? `0${number}` : number;
     return formated;
@@ -24,27 +25,54 @@ const CreateNumbers: React.FC<ICreateNumbersProps> = ({quantity,clickHandler, co
     return resp ? true : false
   };
 
-  const createNumbers = () => {
+  const createArrayNumbers = () => {
     var aux = [];
-    for(var i=1 ; i<=quantity; i++){
-       aux.push(
-          <Number 
-            key={i}
-            onPress={ () => { const number = formateNumber(i); clickHandler(number.toString()) } }
-            title={formateNumber(i).toString()}
-            color={color}
-            isActive={verifyNumber(i)}
-            >
-            {formateNumber(i)}
-          </Number> 
-      )
+    for ( var i=1 ; i<=quantity; i++ ) {
+     aux.push(i);
     }
-    return aux;
-  }  
+    setNumbersList(aux)
+  };
+
+  useEffect(() => {
+    createArrayNumbers()
+  },[quantity])
+  
+
+  // const createNumbers = () => {
+  //   var aux = [];
+  //   for ( var i=1 ; i<=quantity; i++ ) {
+  //      aux.push(
+  //         <Number 
+  //           value={formateNumber(i).toString()}
+  //           key={i}
+  //           onPress={clickHandler}
+  //           title={formateNumber(i).toString()}
+  //           color={color}
+  //           isActive={verifyNumber(i)}
+  //           >
+  //           {formateNumber(i)}
+  //         </Number> 
+  //     )
+  //   }
+  //   return aux;
+  // }  
 
   return (  
     <Container>
-      {createNumbers()}
+      {numbersList.map(number => (
+        <Number 
+        size="large"
+        value={formateNumber(number).toString()}
+        key={number}
+        onPress={() => clickHandler(formateNumber(number).toString())}
+        title={formateNumber(number).toString()}
+        color={color}
+        isActive={verifyNumber(number)}
+        >
+        {formateNumber(number)}
+      </Number> 
+        
+      ))}
     </Container>
   );
 };

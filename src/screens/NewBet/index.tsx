@@ -4,6 +4,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import api from '../../services/api';
 import ButtonGames from '../../components/GameButton';
 import Header from '../../components/Header';
+import SelectedNumbersAndButtons from '../../components/SelectedNumbersAndButtons';
 
 import { Container, Title, FilterText, GameTypeArea,
           ListGamesArea, SubArea } from './styles'; 
@@ -56,11 +57,8 @@ const Home: React.FC = () => {
   }, [games]);
 
   // função que add novo número
-  const addNumberHandler = useCallback((number: string) => {
-    // verificando se já tem o maximo de elementos possíveis
-    if(selectedNumbers.length + 1> selectedGame!['max_number']) {
-      return alert('Número máximo adicionado!');
-    }
+  const addNumberHandler = useCallback((number: any) => {
+
     // valor do botão clicado
     const newNumber = Number(number);
 
@@ -68,6 +66,11 @@ const Home: React.FC = () => {
     if(selectedNumbers.find(num => num === newNumber)){
       const aux = selectedNumbers.filter(num => num !== newNumber);
       return setSelectedNumbers(aux);
+    }
+
+     // verificando se já tem o maximo de elementos possíveis
+     if(selectedNumbers.length + 1> selectedGame!['max_number']) {
+      return alert('Número máximo adicionado!');
     }
 
     // add no array o número, após as validações
@@ -99,18 +102,24 @@ const clearGameHandler = () => {
             </ButtonGames> 
           ))}
           </GameTypeArea>
+
           <SubArea>
-           <BetInfoFill text={selectedGame.description} />
+            { selectedNumbers.length > 0 ?
+              <SelectedNumbersAndButtons color={selectedGame.color} selectedNumbers={selectedNumbers} /> 
+              :
+             <BetInfoFill text={selectedGame.description} />
+            }
           </SubArea>
+
         </Container>
 
         <ListGamesArea>
         {selectedGame &&  
-            <CreateNumbers
-              clickHandler={addNumberHandler}
-              color={selectedGame.color}
-              numbers={selectedNumbers} 
-              quantity={selectedGame.range | 0} 
+          <CreateNumbers
+            clickHandler={addNumberHandler}
+            color={selectedGame.color}
+            numbers={selectedNumbers} 
+            quantity={selectedGame.range | 0} 
         />}
         </ListGamesArea>
       </>

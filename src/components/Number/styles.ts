@@ -3,11 +3,12 @@ import styled from 'styled-components/native';
 interface iContainerProps {
   color: string;
   isActive: boolean;
+  size?: string;
 }
 
 export const Container = styled.TouchableOpacity<iContainerProps>`
-  width: 63px;
-  height: 65px;
+  width: ${props => props.size === 'large' ? '63px' : '31px' };
+  height: ${props => props.size === 'large' ? '65px' : '33px' };
   border-radius: 100px;
 
   justify-content: center;
