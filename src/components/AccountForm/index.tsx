@@ -37,9 +37,9 @@ const AccountForm: React.FC<IAuthProps> = ({ clickHandler }) => {
 
       <Form ref={formRef} onSubmit={handleSubmit}>
         <FormBody>
-          <Input name="name" placeholder="Name" type="name" required />
-          <Input name="email" placeholder="Email" type="email" required />
-          <Input name="password" placeholder="Password" type="password" required />
+          <Input name="name"  />
+          <Input name="email"  />
+          <Input name="password"  />
 
           <TouchableOpacity>
             <ButtonLogin> Save <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 

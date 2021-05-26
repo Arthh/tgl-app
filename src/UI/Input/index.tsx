@@ -70,6 +70,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name,requ
         <Container style={containerStyle} isValue={isValue} isFocused={isFocused} isError={!!error}>
             <Label isValue={defaultValue || inputValueRef.current.value } isFocused={isFocused} isError={!!error} >{name}</Label>
             <TextInput
+                autoCapitalize='none'
                 ref={inputElementRef}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}

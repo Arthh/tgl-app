@@ -1,16 +1,22 @@
 import React from 'react';
 
-import { NumbersArea, ButtonsOptions } from './styles';
+import { NumbersArea, ButtonsOptions,
+  GameButtonOptions, GameButtonText } from './styles';
 
 import Number from '../Number';
 
 interface ISelectedNumbersAndButtonsProps {
   selectedNumbers: number[]
   color: string
+  removeHandler: (number: any) => any;
+  completeGameHandler: () => void;
+  clearGameHandler: () => void;
+  addGameHandler: () => void;
 }
 
 
-const SelectedNumbersAndButtons: React.FC<ISelectedNumbersAndButtonsProps> = ({ selectedNumbers, color }) => {
+const SelectedNumbersAndButtons: React.FC<ISelectedNumbersAndButtonsProps> =
+ ({ removeHandler, completeGameHandler, clearGameHandler, addGameHandler, selectedNumbers, color }) => {
   return (
     <>
       <NumbersArea>
@@ -19,7 +25,7 @@ const SelectedNumbersAndButtons: React.FC<ISelectedNumbersAndButtonsProps> = ({ 
             size="small"
             value={number.toString()}
             key={number}
-            onPress={() => (console.log(number)) }
+            onPress={() => removeHandler(number) }
             title={number.toString()}
             color={color}
             isActive={true}
@@ -30,6 +36,25 @@ const SelectedNumbersAndButtons: React.FC<ISelectedNumbersAndButtonsProps> = ({ 
       </NumbersArea>
 
       <ButtonsOptions>
+
+        <GameButtonOptions onPress={completeGameHandler} >
+          <GameButtonText>
+            Complete Game
+          </GameButtonText>
+        </GameButtonOptions>
+        
+        <GameButtonOptions onPress={clearGameHandler}>
+          <GameButtonText>
+            Clear Game
+          </GameButtonText>
+        </GameButtonOptions>
+
+        <GameButtonOptions onPress={addGameHandler} addToCart={true}>
+          <GameButtonText addToCart={true}>
+            Add To Cart
+          </GameButtonText>
+        </GameButtonOptions>
+
 
       </ButtonsOptions>
     </>

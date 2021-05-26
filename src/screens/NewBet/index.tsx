@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import api from '../../services/api';
 import ButtonGames from '../../components/GameButton';
@@ -7,9 +8,10 @@ import Header from '../../components/Header';
 import SelectedNumbersAndButtons from '../../components/SelectedNumbersAndButtons';
 
 import { Container, Title, FilterText, GameTypeArea,
-          ListGamesArea, SubArea } from './styles'; 
+          ListGamesArea, SubArea, CartButton } from './styles'; 
 import BetInfoFill from '../../components/BetInfoFill';
 import CreateNumbers from '../../components/CreateNumbers';
+import Cart from '../../components/Cart';
 
 export interface IGameProps {
   id?: number;
@@ -27,6 +29,7 @@ const Home: React.FC = () => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState<IGameProps>( );
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([ ]);
+  const [showCart, setShowCart] = useState(false);
 
   const loadAllGames = async() =>{
     try {
@@ -48,13 +51,23 @@ const Home: React.FC = () => {
     },[]);
 
 
+    const handleCart = () => {
+      console.log(showCart);
+      return setShowCart(!showCart)
+    }
 
-   // verificando qual jogo está selecionado
+   // função que verifica qual jogo está selecionado
    const changeGameHandler = useCallback((gameClicked) => {
     const auxGame = games.find((game:IGameProps) => game.type === gameClicked.type)
     setSelectedGame(auxGame);
     return clearGameHandler();
   }, [games]);
+
+  // função que remove um numero selecionado
+  const removeSelectedNumber = (number: number) => {
+    const aux = selectedNumbers.filter(num => num !== number);
+      return setSelectedNumbers(aux);
+  }
 
   // função que add novo número
   const addNumberHandler = useCallback((number: any) => {
@@ -64,8 +77,7 @@ const Home: React.FC = () => {
 
     // verificando se já existe no array o elemento
     if(selectedNumbers.find(num => num === newNumber)){
-      const aux = selectedNumbers.filter(num => num !== newNumber);
-      return setSelectedNumbers(aux);
+      return removeSelectedNumber(newNumber);
     }
 
      // verificando se já tem o maximo de elementos possíveis
@@ -82,10 +94,98 @@ const clearGameHandler = () => {
   return setSelectedNumbers([]);
 };
 
+  // função que formata um número
+  const formatNumberOfButtons = (number:number) =>{
+    var formated = number < 10 ? `0${number}` : number;
+    return formated;
+  }
+
+  // função que gera números aleatorios.
+  const generateRandomNumbers = (numberMax:number) => {
+    return Number(formatNumberOfButtons(Math.ceil(Math.random() * numberMax)));
+  }
+
+  // função que completa os números
+  const completeGameHandler = useCallback(() => {
+    var range =  selectedGame!.range;
+    var qntNumbersForComplete = selectedGame!['max_number'] - selectedNumbers.length;
+    var allNumbers = [];
+    while (allNumbers.length < qntNumbersForComplete) {
+      var randomNumber = generateRandomNumbers(range);
+      if(allNumbers.indexOf(randomNumber) === -1 && selectedNumbers.indexOf(randomNumber) === -1 ){
+        allNumbers.push(randomNumber);
+      }
+    }
+    return setSelectedNumbers([...selectedNumbers, ...allNumbers]);
+  },[generateRandomNumbers, selectedGame, selectedNumbers]);
+
+  // função que add game no carrinho
+  const addGameToCartHandler = useCallback(() => {
+    if(selectedNumbers.length < selectedGame!.max_number){
+      return alert(`São necessarios ${selectedGame!.max_number} números!`)
+    }
+
+    const newGame = {
+      id: String(new Date().getTime()),
+      type: selectedGame?.type,
+      game_id: selectedGame?.id,
+      numbers: selectedNumbers,
+      price: selectedGame?.price,
+      day: new Date(),
+      color: selectedGame?.color
+    }
+
+    setGameList([...gameList, newGame]);
+    return clearGameHandler();
+  },[selectedGame?.price, selectedGame?.type, selectedNumbers]);
+  
+  const saveGame = async () => {
+    let price = 0;
+    gameList.forEach(game => price += game.price);
+
+    if(price < 30){
+      return alert('Preço do carrinho inferior a 30$')
+    }
+
+    const cart:any = [];
+
+    gameList.forEach(game => {
+      cart.push({
+        numbers: game.numbers.toString(),
+        price: game.price,
+        day: game.day,
+        game_id: game.game_id
+      })
+    })
+    
+    try {
+      const response = await api.post('/games/bets', {
+      cart,
+      totalPrice: price
+      })
+
+      if(!response){
+        throw new Error('Sending cart data failed.');
+      }
+
+      clearGameHandler();
+      setGameList([]);
+      // alert('Enviado!')
+      return
+    }catch(err){
+      // alert('Erro')
+      return alert('Erro ao enviar requisição, tente novamente mais tarde!');
+    }
+  };
+
+
   return (
       selectedGame ? (
       <>
         <Header/>
+        { gameList.length > 0 ? <CartButton onPress={() => handleCart()} ><AntDesign name="shoppingcart" size={35} color="#B5C401" /></CartButton>
+          : null }
+        {showCart ? <Cart closeCart={handleCart} /> : null}
         <Container>
           <Title> NEW GAME FOR {selectedGame?.type} </Title>
           <FilterText> choose a game </FilterText>
@@ -105,7 +205,14 @@ const clearGameHandler = () => {
 
           <SubArea>
             { selectedNumbers.length > 0 ?
-              <SelectedNumbersAndButtons color={selectedGame.color} selectedNumbers={selectedNumbers} /> 
+              <SelectedNumbersAndButtons 
+                color={selectedGame.color} 
+                selectedNumbers={selectedNumbers} 
+                removeHandler={removeSelectedNumber}
+                completeGameHandler={completeGameHandler}
+                clearGameHandler={clearGameHandler}
+                addGameHandler={addGameToCartHandler}
+              /> 
               :
              <BetInfoFill text={selectedGame.description} />
             }

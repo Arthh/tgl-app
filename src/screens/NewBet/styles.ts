@@ -45,3 +45,11 @@ export const ListGamesArea = styled.ScrollView.attrs({
 `;
 
 export const SubArea = styled.View``;
+
+
+export const CartButton = styled.TouchableOpacity`
+  position: absolute;
+  z-index: 1;
+  right: 85px;
+  top: 62px;
+`;

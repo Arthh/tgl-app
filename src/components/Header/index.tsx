@@ -10,7 +10,7 @@ import { useAuth } from '../../hooks/AuthContext';
 const Header: React.FC = () => {
   const route = useRoute();
   const { signOut } = useAuth();
-  const routeName = route.name === 'NewBet'
+  const routeName = route.name === '$'
   const navigation = useNavigation()
 
 
@@ -25,10 +25,10 @@ const Header: React.FC = () => {
       <Title> TGL </Title>
       <BorderBottom />
       </LogoArea>
-      <HeaderOptions>
-      {routeName &&  <AntDesign name="shoppingcart" size={35} color="#B5C401" />}
-      <MaterialIcons name="logout" size={35} color="#C1C1C1" onPress={handleLogout} />
-      </HeaderOptions>
+      {/* <HeaderOptions> */}
+      {/* {routeName &&  <AntDesign name="shoppingcart" size={35} color="#B5C401" />} */}
+      <MaterialIcons name="logout" size={35} color="#C1C1C1" onPress={handleLogout} style={{ marginTop: 30 }} />
+      {/* </HeaderOptions> */}
     </Container>
   );
 }

@@ -31,3 +31,13 @@ export const CustomText = styled.Text<iContainerProps>`
   font-style: italic;
   color: ${props => props.isActive ?  'white'  : props.color  };
 `;
+
+export const RemoveX = styled.Text`
+  font-size: 8px;
+  font-weight: bold ;
+  font-style: italic;
+  color: #fff;
+  position: absolute;
+  right: 3px;
+  top: 0;
+`;
