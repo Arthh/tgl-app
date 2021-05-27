@@ -1,12 +1,20 @@
 import React from 'react';
 
 import { EvilIcons } from '@expo/vector-icons';
+import dateFormater from '../../utils/dateFormater';
 
 import {  Container, InfoGameArea,Numbers,
-          GameType, GamePrice } from './styles';
+          GameType, GamePrice, OptionsGame } from './styles';
+          
+import { useDispatch } from 'react-redux';
+import { removeProductToCart } from '../../store/modules/cart/action';
+import { TouchableOpacity } from 'react-native';
+import formatCurrency from '../../utils/formatCurrency';
 
 
-const CartItem: React.FC<any> = ({game, removeHandler}) => {
+const CartItem: React.FC<any> =({ item }) => {
+  const dispatch = useDispatch();
+  
 
   const formatOneNumber = (number: number) => { 
     var formated = number < 10 ? `0${number}` : number;
@@ -14,21 +22,33 @@ const CartItem: React.FC<any> = ({game, removeHandler}) => {
   }
 
   const formateNumbers = (numbers: number[]) => {
-    numbers = numbers.sort((a,b) => a - b);
-    const aux = numbers.map(number => formatOneNumber(number));
-    return aux.join(', ');
+    const copy = numbers;
+    const aux = copy.map(numero => formatOneNumber(numero));
+    const numerosOrdenados = aux.sort( (a,b) => Number(a) - Number(b));
+    return numerosOrdenados.join(', ');
   }; 
 
   return (
-    <Container color={game.color}>
+    <Container color={item.color}>
       <InfoGameArea >
-      <EvilIcons name="trash" size={20} color="#707070" style={{ position: 'absolute', right: 20, bottom: 29 }} />
-        <Numbers>{formateNumbers(game.numbers)}</Numbers>
-          <GamePrice> 01/01/2021 - R$(10.99)  </GamePrice>
-          
-        <GameType color={game.color }>{game.type}
+        <Numbers>{formateNumbers(item.numbers)}</Numbers>
+
+        <OptionsGame>
+          <GamePrice> {dateFormater(item.day)} - {formatCurrency(item.price)}  </GamePrice>  
+
+          <TouchableOpacity
+            onPress={() => dispatch(removeProductToCart(item))} >
+            <EvilIcons 
+              name="trash" 
+              size={20}
+              color="#707070"
+            />
+          </TouchableOpacity>
+        </OptionsGame>
+
+        <GameType color={item.color}>{item.type}
         </GameType>
-      </InfoGameArea>
+      </InfoGameArea> 
     </Container>
   );
 };

@@ -16,18 +16,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
 import { GamesProps } from '../../store/modules/games/types';
 import { loadGames } from '../../store/modules/games/actions';
+import { addGamesRequest, addProductToCartRequest } from '../../store/modules/cart/action';
+import { Item } from '../../store/modules/cart/types';
+import { useNavigation } from '@react-navigation/core';
 
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const games = useSelector<IState, GamesProps[]>(state => state.games.games);
+  const gamesInCart = useSelector<IState, Item[]>(state => state.itemCart.items );
+
   const [gameList, setGameList] = useState<any[]>([ ]);
 
   const [selectedGame, setSelectedGame] = useState<GamesProps>( );
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([ ]);
   const [showCart, setShowCart] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => { 
     dispatch(loadGames());
     setSelectedGame(games[0]);
   }, [dispatch])
@@ -101,12 +107,12 @@ const clearGameHandler = () => {
 
   // função que add game no carrinho
   const addGameToCartHandler = useCallback(() => {
-    if(selectedNumbers.length < selectedGame!.maxNumber){
-      return alert(`São necessarios ${selectedGame!.maxNumber} números!`)
+    if(selectedNumbers.length < selectedGame!.max_number){
+      return alert(`São necessarios ${selectedGame!.max_number} números!`)
     }
 
     const newGame = {
-      id: String(new Date().getTime()),
+      id: Number(new Date().getTime()),
       type: selectedGame?.type,
       game_id: selectedGame?.id,
       numbers: selectedNumbers,
@@ -115,6 +121,7 @@ const clearGameHandler = () => {
       color: selectedGame?.color
     }
 
+    dispatch(addProductToCartRequest(newGame))
     setGameList([...gameList, newGame]);
     return clearGameHandler();
   },[selectedGame?.price, selectedGame?.type, selectedNumbers]);
@@ -144,16 +151,14 @@ const clearGameHandler = () => {
       totalPrice: price
       })
 
-      if(!response){
-        throw new Error('Sending cart data failed.');
+      if(response.data) {
+        dispatch(addGamesRequest(gamesInCart));
+        navigation.navigate('Home');
+        clearGameHandler();
+        setGameList([]);
+        return alert('Bet realizada com sucesso!')
       }
-
-      clearGameHandler();
-      setGameList([]);
-      // alert('Enviado!')
-      return
     }catch(err){
-      // alert('Erro')
       return alert('Erro ao enviar requisição, tente novamente mais tarde!');
     }
   };
@@ -163,9 +168,11 @@ const clearGameHandler = () => {
       selectedGame ? (
       <>
         <Header/>
-        { gameList.length > 0 ? <CartButton onPress={() => handleCart()} ><AntDesign name="shoppingcart" size={35} color="#B5C401" /></CartButton>
-          : null }
-        {showCart ? <Cart closeCart={handleCart} gameList={gameList} /> : null}
+         <CartButton onPress={() => handleCart()} >
+          <AntDesign name="shoppingcart" size={35} color="#B5C401" />
+        </CartButton>
+
+        {showCart ? <Cart saveGame={saveGame} closeCart={handleCart} /> : null}
         <Container>
           <Title> NEW GAME FOR {selectedGame?.type} </Title>
           <FilterText> choose a game </FilterText>

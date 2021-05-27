@@ -12,10 +12,11 @@ export enum ActionTypes {
 
 export interface Item {
   id: number;
-  color: string;
   type: string;
+  color: string;
+  game_id: number;
   price: number;
-  numbers: string;
+  numbers: number[];
   day: Date;
 };
 
@@ -25,3 +26,4 @@ export interface CartIState {
   price: number;
   bets: Item[]
 }
+

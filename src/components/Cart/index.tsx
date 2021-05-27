@@ -8,14 +8,21 @@ import CartItem from '../CartItem';
 
 import { Container, TitleCart, CartView, TotalView, TotalCartText, SubtitleTotal, PriceText,
           FinalButton, TextFinalButton, BackGround} from './styles';
+import { useSelector } from 'react-redux';
+import { Item } from '../../store/modules/cart/types';
+import { IState } from '../../store';
 
 
 interface ICartProps {
   closeCart: () => any;
-  gameList: any[]
+  saveGame: () => any;
 }
 
-const Cart: React.FC<ICartProps> = ({ closeCart, gameList }) => {
+const Cart: React.FC<ICartProps> = ({ closeCart, saveGame }) => {
+
+  const gamesInCart = useSelector<IState, Item[]>(state => state.itemCart.items );
+  const cartPrice = useSelector<IState>(state => state.itemCart.price );
+
   return (
     <BackGround>
       <View style={{ width: '38%', height: '100%', opacity: 0.5, backgroundColor: '#FFF' }} >
@@ -27,21 +34,21 @@ const Cart: React.FC<ICartProps> = ({ closeCart, gameList }) => {
     </View>
     <TitleCart><Ionicons name="cart-outline" size={35} color="#B5C401" /> CART</TitleCart>
     <CartView>
-      {gameList.map(item => (
+      {gamesInCart.length > 0 ?  gamesInCart.map(item => (
         <CartItem
-          key={item.numbers}
-          game={item}
+          key={item.day}
+          item={item}
           />
-      ))}
-      </CartView>
+      )) : <Text > Carrinho vazio! </Text> }
 
+      </CartView>
       <TotalView>
         <TotalCartText>CART</TotalCartText>
         <SubtitleTotal>TOTAL</SubtitleTotal>
-        <PriceText>10,99</PriceText>
+        <PriceText> {formatCurrency(Number(cartPrice))} </PriceText>
       </TotalView>
-    
-      <FinalButton onPress={() => (console.log('oi'))}>
+  
+      <FinalButton onPress={() => saveGame()}>
         <TextFinalButton>Save <AntDesign name="arrowright" size={24} color="#B5C401" /></TextFinalButton>
       </FinalButton>
     </Container>

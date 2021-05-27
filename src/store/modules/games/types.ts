@@ -11,8 +11,8 @@ export interface GamesProps {
   color: string;
   range: number;
   price: number;
-  minCartValue: number;
-  maxNumber: number;
+  min_cart_value: number;
+  max_number: number;
 }
 
 export interface GamesItem {

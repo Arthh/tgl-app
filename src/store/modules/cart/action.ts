@@ -1,64 +1,66 @@
 import { ActionTypes, Item } from './types';
 
-export function addProductToCartRequest (item: Item) {
+export function addProductToCartRequest(item: Item) {
   return {
     type: ActionTypes.addProductToCartRequest,
     payload: {
       item,
     }
-  }
+  };
 }
 
-export function addProductToCartSuccess (item: Item) {
+export function addProductToCartSuccess(item: Item) {
   return {
     type: ActionTypes.addProductToCartSuccess,
     payload: {
       item,
     }
   }
-}
+};
 
-export function addProductToCartFailure (error: string) {
+
+export function addProductToCartFailure(error: string){
   return {
-    type: ActionTypes.removeProductToCart,
+    type: ActionTypes.addProductToCartFailure,
     payload: {
       error,
     }
-  }
+  };
 }
 
-export function removeProductToCart (item: Item) {
+export function removeProductToCart(item: Item){
   return {
     type: ActionTypes.removeProductToCart,
     payload: {
       item,
     }
-  }
+  };
 }
 
-export function addGamesRequest (item: Item[]) {
+
+export function addGamesRequest(item: Item[]){
   return {
     type: ActionTypes.addGamesRequest,
     payload: {
       item,
     }
-  }
+  };
 }
 
-export function addGamesSuccess (item: Item[]) {
+export function addGamesSuccess(item: Item[]){
   return {
     type: ActionTypes.addGamesSuccess,
     payload: {
       item,
-    }
-  }
+      }
+  };
 }
 
-export function addGamesFailure (error: boolean) {
+export function addGamesFailure(error: boolean){
   return {
     type: ActionTypes.addGamesFailure,
     payload: {
       error,
     }
-  }
+  };
 }

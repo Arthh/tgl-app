@@ -9,7 +9,7 @@ type IGameButton = ButtonProps & {
 }
 
 const ButtonGames: React.FC<IGameButton> = ({children, color, isActive , ...rest}) => (
-
+  
   <Container isActive={isActive} color={color} {...rest}>
     <CustomText isActive={isActive} color={color} > {children} </CustomText>
   </Container>

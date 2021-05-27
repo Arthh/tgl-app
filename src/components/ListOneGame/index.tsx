@@ -9,7 +9,7 @@ interface IGameProps {
   game: {
     day: string,
     price: any,
-    numbers: any[],
+    numbers: string,
     game: {
       color: string,
       type: string,
@@ -18,10 +18,25 @@ interface IGameProps {
 }
 
 const ListOneGame: React.FC<IGameProps> = ({ game }) => {
+
+  const formatOneNumber = (number: number) => { 
+    var formated = number < 10 ? `0${number}` : number;
+    return formated;
+  }
+  
+  const formateNumbers = (numbers: string) => {
+    const myArray = game.numbers.split(',');
+    const numerosOrdenados = myArray.sort( (a,b) => Number(a) - Number(b));
+    const aux = numerosOrdenados.map(numero => formatOneNumber(Number(numero)));
+    return aux.join(', ');
+  }; 
+  
+
+
   return (
     <Container color={game.game.color}>
       <InfoGameArea >
-        <GameNumbers>{game.numbers}</GameNumbers>
+        <GameNumbers>{formateNumbers(game.numbers)}</GameNumbers>
         <GameInfos>
           {dateFormater(new Date(game.day))} - 
           <GamePrice>{formatCurrency(game.price)}</GamePrice>

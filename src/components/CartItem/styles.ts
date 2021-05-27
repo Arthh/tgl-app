@@ -19,8 +19,6 @@ export const RemoveButtonArea = styled.View<IProps>`
   width: 30px;
   height: auto;
   justify-content: center;
-  border-right-width: 6px;
-  border-right-color: ${props => props.color};
 `;
 
 export const InfoGameArea = styled.View`
@@ -54,4 +52,10 @@ export const GamePrice = styled.Text`
   font-style: italic;
   color: #868686;
   margin-left: 6px;
+`;
+
+export const OptionsGame = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;

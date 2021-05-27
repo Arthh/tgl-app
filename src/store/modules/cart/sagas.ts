@@ -1,43 +1,39 @@
 import { AxiosResponse } from 'axios';
-import { all, put, call, takeLatest } from 'redux-saga/effects';
+import { all, takeLatest, put, call } from 'redux-saga/effects';
 import api from '../../../services/api';
 import { GamesProps } from '../games/types';
+import { addGamesFailure, addGamesRequest, addGamesSuccess, addProductToCartFailure, addProductToCartRequest, addProductToCartSuccess } from './action';
 import { ActionTypes } from './types';
-import { addGamesSuccess, addGamesFailure,
-        addGamesRequest, addProductToCartRequest,
-        addProductToCartFailure, addProductToCartSuccess, } from './action';
 
-type checkItemRequest = ReturnType< typeof addProductToCartRequest >;
-type checkBetRequest = ReturnType< typeof addGamesRequest >;
+type checkItemRequest = ReturnType<typeof addProductToCartRequest>;
+type checkBetRequest = ReturnType<typeof addGamesRequest>;
 
-function* checkItemCart ({ payload }: checkItemRequest ) {
+function* checkItemCart({ payload }: checkItemRequest) {
   const { item } = payload;
 
-  if ( item.numbers ) {
-    yield put(addProductToCartSuccess(item))
+  if (item.numbers) {
+    yield put(addProductToCartSuccess(item));
   } else {
-    yield put(addProductToCartFailure('Selecione mais números para completar a aposta'))
+    yield put(addProductToCartFailure('Erro ao tentar adicionar no carrinho'));
   }
 }
 
-function* checkBetCart ({ payload }: checkBetRequest ) {
+function* checkBetCart({ payload }: checkBetRequest) {
   const { item } = payload;
-  const AxiosGamesResponse: AxiosResponse<GamesProps> = yield call(api.get, '/games');
+  const availableSGamesResponse: AxiosResponse<GamesProps> = yield call(api.get, "/games");
 
   try {
-    if (AxiosGamesResponse.data) {
+    if (availableSGamesResponse.data) {
       yield put(addGamesSuccess(item))
-    } else {
+    }else {
       yield put(addGamesFailure(true))
     }
-  } catch(error) {
-    yield put(addGamesFailure(true))
-  }
+    } catch (err) {
+      yield put(addGamesFailure(true))
+    }
 }
 
-export default all(
-  [
+export default all([
     takeLatest(ActionTypes.addProductToCartRequest, checkItemCart),
-    takeLatest(ActionTypes.addGamesRequest, checkBetCart),
-  ]
-)
+    takeLatest(ActionTypes.addGamesRequest, checkBetCart)
+])

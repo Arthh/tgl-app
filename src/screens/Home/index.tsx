@@ -11,25 +11,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadGames } from '../../store/modules/games/actions';
 import { IState } from '../../store';
 import { GamesProps } from '../../store/modules/games/types';
+import ListAllGames from '../../components/ListAllGames';
+import { select } from '@redux-saga/core/effects';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   const games = useSelector<IState, GamesProps[]>(state => state.games.games);
-
-  const [selectedGame, setSelectedGame] = useState<GamesProps | undefined>();
+  const [selectedGame, setSelectedGame] = useState<number[] >([]);
 
   useEffect(() => {
     dispatch(loadGames());
+
   }, [dispatch])
   
   const changeGameHandler = (gameClicked: any) => {
+    const auxGame = gameClicked;
 
-    const auxGame:GamesProps|undefined = games.find((game:GamesProps) => game.type === gameClicked.type);
-
-    if(selectedGame?.type === auxGame!.type) {
-      return setSelectedGame(undefined);
+    if(selectedGame.includes(auxGame)) {
+      const indexOfNumber = selectedGame.findIndex(auxGame);
+      selectedGame.splice(indexOfNumber, 1);
+      setSelectedGame(selectedGame)
+      return;
     }else {
-      return setSelectedGame(auxGame);
+      return setSelectedGame([ ...selectedGame, auxGame]);
     }
   };
 
@@ -45,8 +49,8 @@ const Home: React.FC = () => {
             key={game.type}
             color={game.color}
             title={game.type}
-            isActive={selectedGame?.type === game.type}
-            onPress={() => changeGameHandler(game)}
+            isActive={selectedGame.indexOf(game.id) !== -1 ? true : false}
+            onPress={() => changeGameHandler(game.id)}
           > 
           {game.type}
           </ButtonGames> 
@@ -55,9 +59,7 @@ const Home: React.FC = () => {
       </Container>
 
       <ListGamesArea>
-        <ListOneGame 
-          game={ { day:'01/01/2021', price: 250 , numbers:[1,2,3], game:{color:'red' , type: 'Loto'} }  }
-        />
+        <ListAllGames filter={selectedGame} />
       </ListGamesArea>
     </>
   );

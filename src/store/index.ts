@@ -12,10 +12,11 @@ export interface IState {
 
 const sagaMiddleware = createSagaMiddleware();
 
+const middleware = [sagaMiddleware];
 
 const store = createStore(
   RootReducer,
-  applyMiddleware( sagaMiddleware )
+  applyMiddleware(...middleware),
 )
 
 sagaMiddleware.run(rootSaga);
