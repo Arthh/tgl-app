@@ -4,15 +4,18 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 import formatCurrency from '../../utils/formatCurrency';
 
+import CartItem from '../CartItem';
+
 import { Container, TitleCart, CartView, TotalView, TotalCartText, SubtitleTotal, PriceText,
           FinalButton, TextFinalButton, BackGround} from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 interface ICartProps {
   closeCart: () => any;
+  gameList: any[]
 }
 
-const Cart: React.FC<ICartProps> = ({ closeCart }) => {
+const Cart: React.FC<ICartProps> = ({ closeCart, gameList }) => {
   return (
     <BackGround>
       <View style={{ width: '38%', height: '100%', opacity: 0.5, backgroundColor: '#FFF' }} >
@@ -24,16 +27,12 @@ const Cart: React.FC<ICartProps> = ({ closeCart }) => {
     </View>
     <TitleCart><Ionicons name="cart-outline" size={35} color="#B5C401" /> CART</TitleCart>
     <CartView>
-      {/* {itensInCart.map(item => (
+      {gameList.map(item => (
         <CartItem
           key={item.numbers}
-          color={item.color}
-          type={item.type}
-          numbers={item.numbers}
-          price={item.price}
-          item={item}
+          game={item}
           />
-      ))} */}
+      ))}
       </CartView>
 
       <TotalView>

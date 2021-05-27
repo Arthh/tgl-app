@@ -6,6 +6,9 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from './src/hooks/AuthContext';
 
+import { Provider } from 'react-redux';
+import store from './src/store'
+
 
 import Routes from './src/routes/index2';
 
@@ -13,11 +16,13 @@ import Routes from './src/routes/index2';
 export default function App() {
 
   return (
-    <NavigationContainer >
+    <Provider store={store}>
+      <NavigationContainer >
         <StatusBar style="auto" />
         <AuthProvider>
           <Routes />
         </AuthProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </Provider>
   );
 }

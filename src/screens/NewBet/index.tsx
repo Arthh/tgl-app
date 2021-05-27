@@ -12,53 +12,33 @@ import { Container, Title, FilterText, GameTypeArea,
 import BetInfoFill from '../../components/BetInfoFill';
 import CreateNumbers from '../../components/CreateNumbers';
 import Cart from '../../components/Cart';
+import { useDispatch, useSelector } from 'react-redux';
+import { IState } from '../../store';
+import { GamesProps } from '../../store/modules/games/types';
+import { loadGames } from '../../store/modules/games/actions';
 
-export interface IGameProps {
-  id?: number;
-  type: string;
-  description: string;
-  range: number;
-  price: number;
-  max_number: number;
-  color: string;
-  min_cart_value: number;
-}
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
+  const games = useSelector<IState, GamesProps[]>(state => state.games.games);
   const [gameList, setGameList] = useState<any[]>([ ]);
-  const [games, setGames] = useState([]);
-  const [selectedGame, setSelectedGame] = useState<IGameProps>( );
+
+  const [selectedGame, setSelectedGame] = useState<GamesProps>( );
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([ ]);
   const [showCart, setShowCart] = useState(false);
 
-  const loadAllGames = async() =>{
-    try {
-      const response = await api.get('/games');
-
-      if(!response){
-        throw new Error('Erro ao recuperar data.');
-      }
-
-      setSelectedGame(response.data[0]);
-      setGames(response.data);
-    }catch (err){   
-      alert('Erro na API!')
-    }
-  }
-  
-    useEffect(() => {
-      loadAllGames();
-    },[]);
-
+  useEffect(() => {
+    dispatch(loadGames());
+    setSelectedGame(games[0]);
+  }, [dispatch])
 
     const handleCart = () => {
-      console.log(showCart);
       return setShowCart(!showCart)
     }
 
    // função que verifica qual jogo está selecionado
    const changeGameHandler = useCallback((gameClicked) => {
-    const auxGame = games.find((game:IGameProps) => game.type === gameClicked.type)
+    const auxGame = games.find((game:GamesProps) => game.type === gameClicked.type)
     setSelectedGame(auxGame);
     return clearGameHandler();
   }, [games]);
@@ -121,8 +101,8 @@ const clearGameHandler = () => {
 
   // função que add game no carrinho
   const addGameToCartHandler = useCallback(() => {
-    if(selectedNumbers.length < selectedGame!.max_number){
-      return alert(`São necessarios ${selectedGame!.max_number} números!`)
+    if(selectedNumbers.length < selectedGame!.maxNumber){
+      return alert(`São necessarios ${selectedGame!.maxNumber} números!`)
     }
 
     const newGame = {
@@ -185,12 +165,12 @@ const clearGameHandler = () => {
         <Header/>
         { gameList.length > 0 ? <CartButton onPress={() => handleCart()} ><AntDesign name="shoppingcart" size={35} color="#B5C401" /></CartButton>
           : null }
-        {showCart ? <Cart closeCart={handleCart} /> : null}
+        {showCart ? <Cart closeCart={handleCart} gameList={gameList} /> : null}
         <Container>
           <Title> NEW GAME FOR {selectedGame?.type} </Title>
           <FilterText> choose a game </FilterText>
           <GameTypeArea> 
-          {games.map((game:IGameProps) => (
+          {games.map((game:GamesProps) => (
             <ButtonGames 
               key={game.type}
               color={game.color}

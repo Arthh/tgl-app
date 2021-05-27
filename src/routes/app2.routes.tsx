@@ -22,9 +22,9 @@ const AppRoutes: React.FC = () => {
           if (route.name === "Home") {
             iconColor = focused ? '#B5C401' : '#C1C1C1';
               return (
-                  <View style={{ borderTopWidth: 4, borderColor: iconColor, padding: 5 }}>
-                      <Ionicons name="ios-home-outline" size={30} color={iconColor} />
-                  </View>
+                <View style={{ borderTopWidth: 4, borderColor: iconColor, padding: 0 }}>
+                  <Ionicons name="ios-home-outline" size={30} color={iconColor} />
+                </View>
               )
           }
 
