@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import ButtonGames from '../../components/GameButton';
-import ListOneGame from '../../components/ListOneGame';
 import Header from '../../components/Header';
 
 import { Container, Title, FilterText, FilterButtonArea,
@@ -23,24 +22,25 @@ const Home: React.FC = () => {
   const loadAllGames = async () => {
     try{
       const response = await api.get('/games/bets/all')
-
       if(response.data){
         setAllGames(response.data);
         return;
       }
-    } catch(err){
-    alert('erro na api!')
+    } catch(err) {
+      // user nao sabe o que é API **
+      alert('Erro ao recuperar os jogos!');
     }
   }
 
+  // verificar se user tem acesso a internet, se não carregar do redux.
   useEffect(() => {
     loadAllGames();
-  }, [games])
+  }, [loadAllGames])
 
 
   useEffect(() => {
     dispatch(loadGames());
-  }, [dispatch])
+  }, [])
   
   const changeGameHandler = (gameClicked: any) => {
     const auxGame = gameClicked;
@@ -63,6 +63,7 @@ const Home: React.FC = () => {
         <FilterText> filters </FilterText>
         <FilterButtonArea> 
         {games.map((game:GamesProps) => (
+          // colocar scroll para mais jogos*
           <ButtonGames 
             key={game.type}
             color={game.color}

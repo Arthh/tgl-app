@@ -72,6 +72,7 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   const signOut = async () => {
+    // limpar o cart games (redux)**
     try{
     await AsyncStorage.removeItem('#@tgltoken@#');
     setData({} as AuthState)

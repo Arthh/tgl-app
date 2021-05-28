@@ -12,19 +12,6 @@ interface IListGamesProps {
   filter: any[] | undefined;
   allGames: any[] | undefined;
 }
-
-interface IGameProps {
-  game: {
-    day: string,
-    price: any,
-    numbers: any[],
-    game: {
-      color: string,
-      type: string,
-    }
-  }
-}
-
 const ListAllGames: React.FC<IListGamesProps> = ({ allGames, filter }) => {
   const [filterGames, setFilterGames] = useState([]);
 
@@ -46,12 +33,12 @@ const ListAllGames: React.FC<IListGamesProps> = ({ allGames, filter }) => {
 
   return (
     <Container>
-      {filterGames ?
+      {filterGames && filterGames ?
         filterGames.map((item:any) => (
-        <ListOneGame key={item.id} game={item}/>
-       )) 
+          <ListOneGame key={item.id} game={item}/>
+        )) 
        : 
-       <Text>Não existe jogos desse tipo!!</Text>}
+       <Text>Não existem jogos desse tipo!!</Text>}
     </Container>
   );
 };

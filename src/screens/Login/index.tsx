@@ -19,7 +19,7 @@ const Login: React.FC = () => {
 
   return (
     <Container>
-      {active && (
+      {/* {active && (
         <Animated.View onTouchStart={doAnimationHandler} style={{
           height: '100%',
           width: '100%',
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
             <SubTitle>For</SubTitle>
             <TertiaryTitle>LOTTERY</TertiaryTitle>
         </Animated.View>
-      )}
+      )}   */}
       <AuthForm />
       <FirstFooter />
     </Container>
