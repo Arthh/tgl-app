@@ -39,7 +39,12 @@ const Cart: React.FC<ICartProps> = ({ closeCart, saveGame }) => {
           key={item.day}
           item={item}
           />
-      )) : <Text > Carrinho vazio! </Text> }
+      )) : 
+        <Text 
+          style={{ marginTop: 30, marginLeft: 10, fontSize: 20, fontWeight: 'bold' , color: '#B5C401'}}
+        > Carrinho vazio! 
+        </Text> 
+      }
 
       </CartView>
       <TotalView>

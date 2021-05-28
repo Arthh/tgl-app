@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/AuthContext';
 import { TouchableOpacity } from 'react-native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -19,11 +19,16 @@ interface FormData {
   password: string
 }
 
-const AuthForm: React.FC<any> = ({  }) => {
+const AuthForm: React.FC = ( ) => {
   const { signIn } = useAuth();
+  const [showPassword, setShowPassword] = useState(true);
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
   const [loading, setLoading] = useState(false);
+
+  const showPasswordHandler = () => {
+    return setShowPassword(!showPassword);
+  }
 
   const handleSubmit = useCallback( async (data: FormData) => {
     try {
@@ -73,12 +78,18 @@ const AuthForm: React.FC<any> = ({  }) => {
 
         <Input
           name="password"
-          secureTextEntry={true}
           placeholderTextColor="#9D9D9D"
+          secureTextEntry={showPassword}
           selectionColor={'#B5C401'}
           />
 
-          <TouchableOpacity onPress={() => navigation.navigate('forgotpass')} > 
+        <TouchableOpacity
+          onPress={() => showPasswordHandler()}
+          style={{ position: 'absolute', bottom: 180, right: 50, }}>
+          {showPassword ? <FontAwesome name="eye" size={24} color="#9D9D9D" /> : <FontAwesome name="eye-slash" size={24} color="#9D9D9D" />}
+        </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('forgotPass')} > 
             <ForgotText > I forget my password! </ForgotText>
           </TouchableOpacity>
 
@@ -88,7 +99,7 @@ const AuthForm: React.FC<any> = ({  }) => {
         </FormBody>
       </Form>
 
-      <TouchableOpacity onPress={() => navigation.navigate('signup')} >
+      <TouchableOpacity onPress={() => navigation.navigate('signUp')} >
         <ButtonSignUp> Sign Up <AntDesign name="arrowright" size={30} color="#707070" /> </ButtonSignUp>
       </TouchableOpacity>
     </Container>

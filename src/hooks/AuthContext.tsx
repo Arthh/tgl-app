@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api from '../services/api';
-import Api from '../services/api';
 
 export interface UserData {
   name?: string
@@ -45,7 +44,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async ({ email, password }) => {
     try{
-      const response = await Api.post('/session', {
+      const response = await api.post('/session', {
         email: email,
         password: password
       });
@@ -57,6 +56,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
       api.defaults.headers.Authorization = `Bearer ${token}`;
     }catch(err){
+      alert('Credenciais Incorretas!');
      console.log(err.message);   
     }
   },[]);
@@ -81,12 +81,14 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   };
 
-  const updateUser = async (userData: UserData) => {
+  const updateUser = async ({ name, email, password }) => {
     try{
-    await api.put('/users ', {
-      name: userData.name,
-      email: userData.email,
-      password: userData.password
+      console.log(name, email, password)
+      
+    await api.put('/users', {
+      name: name,
+      email: email,
+      password: password
     });
     }catch(err){
       return alert('Erro ao atualizar perfil!');

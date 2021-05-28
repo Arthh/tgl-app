@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { TouchableOpacity } from 'react-native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import api from '../../services/api';
 import Input from '../../UI/Input';
@@ -22,6 +22,11 @@ interface FormData {
 const SignUpForm: React.FC<any> = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
+  const [showPassword, setShowPassword] = useState(true);
+
+  const showPasswordHandler = () => {
+    return setShowPassword(!showPassword);
+  }
 
   const handleSubmit = async (data: FormData) => {
     try {
@@ -41,7 +46,7 @@ const SignUpForm: React.FC<any> = () => {
         password: data.password
       });
       alert('Registrado com sucesso!');
-      navigation.navigate('login');
+      navigation.navigate('signIn');
     } catch (err) {
       if(err instanceof Yup.ValidationError){
         const errorMessages = {};
@@ -77,7 +82,14 @@ const SignUpForm: React.FC<any> = () => {
             name="password"
             placeholderTextColor="#9D9D9D"
             selectionColor={'#B5C401'}
+            secureTextEntry={showPassword}
           />
+
+        <TouchableOpacity
+          onPress={() => showPasswordHandler()}
+          style={{ position: 'absolute', bottom: 120, right: 40, }}>
+          {showPassword ? <FontAwesome name="eye" size={24} color="#9D9D9D" /> : <FontAwesome name="eye-slash" size={24} color="#9D9D9D" />}
+        </TouchableOpacity>
 
           <TouchableOpacity onPress={() => formRef.current?.submitForm()}  >
             <ButtonLogin> Register <AntDesign name="arrowright" size={30} color="#B5C401" /> </ButtonLogin> 
@@ -85,7 +97,7 @@ const SignUpForm: React.FC<any> = () => {
         </FormBody>
       </Form>
 
-      <TouchableOpacity onPress={() => navigation.navigate('login')}>
+      <TouchableOpacity onPress={() => navigation.navigate('signIn')}>
         <ButtonSignUp> <AntDesign name="arrowleft" size={30} color="#707070" /> Back </ButtonSignUp>
       </TouchableOpacity>
     </Container>

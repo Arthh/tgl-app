@@ -12,25 +12,43 @@ import { loadGames } from '../../store/modules/games/actions';
 import { IState } from '../../store';
 import { GamesProps } from '../../store/modules/games/types';
 import ListAllGames from '../../components/ListAllGames';
-import { select } from '@redux-saga/core/effects';
+import api from '../../services/api';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   const games = useSelector<IState, GamesProps[]>(state => state.games.games);
   const [selectedGame, setSelectedGame] = useState<number[] >([]);
+  const [allGames, setAllGames] = useState([]);
+
+  const loadAllGames = async () => {
+    try{
+      const response = await api.get('/games/bets/all')
+
+      if(response.data){
+        setAllGames(response.data);
+        return;
+      }
+    } catch(err){
+    alert('erro na api!')
+    }
+  }
+
+  useEffect(() => {
+    loadAllGames();
+  }, [games])
+
 
   useEffect(() => {
     dispatch(loadGames());
-
   }, [dispatch])
   
   const changeGameHandler = (gameClicked: any) => {
     const auxGame = gameClicked;
+    const auxNumeros = selectedGame;
 
     if(selectedGame.includes(auxGame)) {
-      const indexOfNumber = selectedGame.findIndex(auxGame);
-      selectedGame.splice(indexOfNumber, 1);
-      setSelectedGame(selectedGame)
+      auxNumeros.splice(auxNumeros.indexOf(auxGame), 1);
+      setSelectedGame([...auxNumeros])
       return;
     }else {
       return setSelectedGame([ ...selectedGame, auxGame]);
@@ -59,7 +77,7 @@ const Home: React.FC = () => {
       </Container>
 
       <ListGamesArea>
-        <ListAllGames filter={selectedGame} />
+        {allGames && <ListAllGames allGames={allGames} filter={selectedGame} />}
       </ListGamesArea>
     </>
   );

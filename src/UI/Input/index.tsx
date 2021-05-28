@@ -9,6 +9,7 @@ interface InputProps extends TextInputProps {
     name: string;
     containerStyle?: {};
     required?: false;
+    
 }
 
 interface InputValueReference {
@@ -68,7 +69,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = ({ name,requ
 
     return (
         <Container style={containerStyle} isValue={isValue} isFocused={isFocused} isError={!!error}>
-            <Label isValue={defaultValue || inputValueRef.current.value } isFocused={isFocused} isError={!!error} >{name}</Label>
+            <Label isValue={defaultValue || inputValueRef.current.value} isFocused={isFocused} isError={!!error} >{name}</Label>
             <TextInput
                 autoCapitalize='none'
                 ref={inputElementRef}

@@ -17,7 +17,7 @@ export const Container = styled.View`
   background-color: #FFF;
   margin-top: 12%;
   margin-right: 25%;
-  right: 0px;
+  right: 8px;
   z-index: 3;
   opacity: 1;
 `;
@@ -66,7 +66,8 @@ export const PriceText = styled.Text`
   font-size: 15px;
   font-weight: bold;
   font-style: italic;
-  margin-left: 80px;
+  margin-left: 50px;
+
 `;
 
 export const FinalButton = styled.TouchableOpacity`

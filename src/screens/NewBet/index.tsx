@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View, Animated } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 import api from '../../services/api';
@@ -9,6 +9,7 @@ import SelectedNumbersAndButtons from '../../components/SelectedNumbersAndButton
 
 import { Container, Title, FilterText, GameTypeArea,
           ListGamesArea, SubArea, CartButton } from './styles'; 
+
 import BetInfoFill from '../../components/BetInfoFill';
 import CreateNumbers from '../../components/CreateNumbers';
 import Cart from '../../components/Cart';
@@ -26,7 +27,6 @@ const Home: React.FC = () => {
   const navigation = useNavigation();
   const games = useSelector<IState, GamesProps[]>(state => state.games.games);
   const gamesInCart = useSelector<IState, Item[]>(state => state.itemCart.items );
-
   const [gameList, setGameList] = useState<any[]>([ ]);
 
   const [selectedGame, setSelectedGame] = useState<GamesProps>( );
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
     setSelectedGame(games[0]);
   }, [dispatch])
 
-    const handleCart = () => {
+    const handleCart = () => {   
       return setShowCart(!showCart)
     }
 
@@ -172,7 +172,7 @@ const clearGameHandler = () => {
           <AntDesign name="shoppingcart" size={35} color="#B5C401" />
         </CartButton>
 
-        {showCart ? <Cart saveGame={saveGame} closeCart={handleCart} /> : null}
+        {showCart && (<Cart saveGame={saveGame} closeCart={handleCart} />)}
         <Container>
           <Title> NEW GAME FOR {selectedGame?.type} </Title>
           <FilterText> choose a game </FilterText>

@@ -1,26 +1,44 @@
-import React, { useCallback } from 'react';
-
-import * as Yup from 'yup'
-
+import React, { useCallback, useEffect, useState } from 'react';
 import AuthForm from '../../components/AuthForm';
 import FirstFooter from '../../components/FirstFooter';
-import { useAuth } from '../../hooks/AuthContext';
-
-import { Container } from './styles';
+import { Animated, Text, View, Image } from 'react-native';
+import { Container, Title, SubTitle, TertiaryTitle } from './styles';
 
 const Login: React.FC = () => {
-   const { signIn } = useAuth();
+  const [ animation ] = useState(new Animated.Value(0));
+  const [active, setActive] = useState(false);
 
-   const handleProps = useCallback( async(userLogin: any) => {
-     console.log(userLogin)
-     return
-    // await signIn(userLogin);
+  useEffect(() => {
+    Animated.timing(animation, { toValue: 1000, duration: 2500, useNativeDriver: true }).start();
+    setActive(true);
+}, [])
 
-  },[signIn]);
+  const doAnimationHandler = () => {
+    Animated.timing(animation, { toValue: 1000, duration: 1000, useNativeDriver: true }).start();
+  }
 
   return (
     <Container>
-      <AuthForm clickHandler={handleProps}/>
+      {active && (
+        <Animated.View onTouchStart={doAnimationHandler} style={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          zIndex: 1,
+          backgroundColor: 'transparent',
+          transform: [{ translateY: animation }]
+        }} >
+          <View style={{ justifyContent: 'center', alignItems: 'center' }} />
+            <Text style={{ color: '#000', position: 'absolute', top: 100, fontSize: 25, fontWeight: 'bold' }}>X</Text>
+            <Image source={require('../../assets/bets.png')} />
+            <Title>The Geatest App</Title>
+            <SubTitle>For</SubTitle>
+            <TertiaryTitle>LOTTERY</TertiaryTitle>
+        </Animated.View>
+      )}
+      <AuthForm />
       <FirstFooter />
     </Container>
   );
